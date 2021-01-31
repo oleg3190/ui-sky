@@ -2,23 +2,24 @@
 .api(v-if="sortedItems.length")
   title-link.title2.api__title(h3) {{ title }}
   ul(v-if="sortedItems.length")
-    li.api__item(v-for="item in sortedItems" :key="item.label" v-if="!item.hide")
-      title-link(h4 :slug="item.label") {{ item.label }}
-      template(v-if="title === 'Props'")
-        span.types.teal="[{{ item.type.join(', ') }}]"
-        | ,
-        w-tag.text-upper.ml2(v-if="item.required" sm outline color="red") Required
-        span.grey.ml2(v-else)
-          | Default:
-          strong.default-value.code.deep-orange-light1.ml2 {{ item.default }}
-      p(v-html="item.description")
-      .mt2(v-if="item.params")
-        w-icon.teal.ml-1 wi-chevron-right
-        span.teal Params
-        ul.mt1.ml7
-          li(v-for="(desc, label) in item.params" :key="label")
-            strong.code {{ label }}:
-            span.ml2(v-html="desc")
+    template(v-for="item in sortedItems" :key="item.label")
+      li.api__item(v-if="!item.hide")
+        title-link(h4 :slug="item.label") {{ item.label }}
+        template(v-if="title === 'Props'")
+          span.types.teal="[{{ item.type.join(', ') }}]"
+          | ,
+          w-tag.text-upper.ml2(v-if="item.required" sm outline color="red") Required
+          span.grey.ml2(v-else)
+            | Default:
+            strong.default-value.code.deep-orange-light1.ml2 {{ item.default }}
+        p(v-html="item.description")
+        .mt2(v-if="item.params")
+          w-icon.teal.ml-1 wi-chevron-right
+          span.teal Params
+          ul.mt1.ml7
+            li(v-for="(desc, label) in item.params" :key="label")
+              strong.code {{ label }}:
+              span.ml2(v-html="desc")
   div.grey(v-else) None
 </template>
 

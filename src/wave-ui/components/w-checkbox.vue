@@ -3,12 +3,12 @@ component(
   ref="formEl"
   :is="formRegister && !wCheckboxes ? 'w-form-element' : 'div'"
   v-bind="formRegister && { validators, inputValue: isChecked, disabled }"
-  :valid.sync="valid"
+  v-model:valid="valid"
   @reset="$emit('update:modelValue', isChecked = null);$emit('input', null)"
   :class="classes")
   input(
     ref="input"
-    :id="`w-checkbox--${_uid}`"
+    :id="`w-checkbox--${_.uid}`"
     type="checkbox"
     :name="inputName"
     :checked="isChecked || null"
@@ -21,16 +21,16 @@ component(
     :aria-checked="isChecked || 'false'"
     role="checkbox")
   template(v-if="hasLabel && labelOnLeft")
-    label.w-checkbox__label.w-form-el-shakable.pr2(v-if="$slots.default" :for="`w-checkbox--${_uid}`")
+    label.w-checkbox__label.w-form-el-shakable.pr2(v-if="$slots.default" :for="`w-checkbox--${_.uid}`")
       slot
-    label.w-checkbox__label.w-form-el-shakable.pr2(v-else-if="label" :for="`w-checkbox--${_uid}`" v-html="label")
+    label.w-checkbox__label.w-form-el-shakable.pr2(v-else-if="label" :for="`w-checkbox--${_.uid}`" v-html="label")
   .w-checkbox__input(@click="$refs.input.focus();$refs.input.click()" :class="this.color")
     svg(width="11px" height="9px" viewbox="0 0 12 9")
       polyline(points="1 5 4 8 10 2")
   template(v-if="hasLabel && !labelOnLeft")
-    label.w-checkbox__label.w-form-el-shakable.pl2(v-if="$slots.default" :for="`w-checkbox--${_uid}`")
+    label.w-checkbox__label.w-form-el-shakable.pl2(v-if="$slots.default" :for="`w-checkbox--${_.uid}`")
       slot
-    label.w-checkbox__label.w-form-el-shakable.pl2(v-else-if="label" :for="`w-checkbox--${_uid}`" v-html="label")
+    label.w-checkbox__label.w-form-el-shakable.pl2(v-else-if="label" :for="`w-checkbox--${_.uid}`" v-html="label")
 </template>
 
 <script>
@@ -39,10 +39,13 @@ import FormElementMixin from '../mixins/form-elements'
 export default {
   name: 'w-checkbox',
   mixins: [FormElementMixin],
-  inject: { wCheckboxes: { default: null } },
+
+  inject: {
+    wCheckboxes: { default: null }
+  },
 
   props: {
-    value: { default: false }, // v-model to check or uncheck.
+    modelValue: { default: false }, // v-model to check or uncheck.
     // When `value` is taken by a v-model and multiple w-checkbox are plugged on
     // the same v-model, this allow returning to the v-model a custom value.
     returnValue: {},
@@ -59,7 +62,7 @@ export default {
 
   data () {
     return {
-      isChecked: this.value,
+      isChecked: this.modelValue,
       ripple: {
         start: false,
         end: false,
@@ -70,7 +73,7 @@ export default {
 
   computed: {
     hasLabel () {
-      return (this.$slots.default && this.$slots.default.length) || this.label
+      return this.label || this.$slots.default
     },
     classes () {
       return {
@@ -108,7 +111,7 @@ export default {
   },
 
   watch: {
-    value (value) {
+    modelValue (value) {
       this.isChecked = value
     }
   }

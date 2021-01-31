@@ -377,7 +377,7 @@ div
     w-select.mb4(
       :items="items1"
       label="Disabled & filled"
-      value="Item 1"
+      model-value="Item 1"
       outline
       disabled)
     w-select.mb4(
@@ -387,7 +387,7 @@ div
       readonly)
     w-select(
       :items="items1"
-      value="Item 1"
+      model-value="Item 1"
       label="Readonly & filled"
       outline
       readonly)
@@ -399,7 +399,7 @@ div
         disabled)
       w-select.mb4(
         :items="items"
-        value="Item 1"
+        model-value="Item 1"
         label="Disabled &amp; filled"
         outline
         disabled)
@@ -410,7 +410,7 @@ div
         readonly)
       w-select(
         :items="items"
-        value="Item 1"
+        model-value="Item 1"
         label="Readonly &amp; filled"
         outline
         readonly)

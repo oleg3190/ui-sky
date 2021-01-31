@@ -3,29 +3,30 @@ component(
   ref="formEl"
   :is="formRegister ? 'w-form-element' : 'div'"
   v-bind="formRegister && { validators, inputValue: checkboxItems.some(item => item.isChecked), disabled }"
-  :valid.sync="valid"
+  v-model:valid="valid"
   @reset="reset"
   :column="!inline"
   :class="classes")
   w-checkbox(
     v-for="(item, i) in checkboxItems"
     :key="i"
-    :name="`${name || `w-checkboxes--${_uid}`}[]`"
+    :model-value="item.isChecked"
+    :name="`${name || `w-checkboxes--${_.uid}`}[]`"
     :label="item.label"
     :label-on-left="labelOnLeft"
-    :value="item.isChecked"
     :color="item.color"
     :round="round"
+    @update:model-value="toggleCheck(item, $event)"
     :disabled="disabled || null"
     :readonly="readonly || null"
-    @input="toggleCheck(item, $event)"
     @focus="$emit('focus', $event)"
     :class="{ mt1: !inline && i }")
-    slot(name="item" v-if="$scopedSlots.item" :item="item" v-html="item.label")
+    slot(v-if="$slots.item" name="item" :item="item")
+    div(v-else-if="item.label" v-html="item.label")
 </template>
 
 <script>
-import Vue from 'vue'
+import { reactive } from 'vue'
 import FormElementMixin from '../mixins/form-elements'
 
 export default {
@@ -34,7 +35,7 @@ export default {
 
   props: {
     items: { type: Array, required: true }, // All the possible options.
-    value: { type: Array }, // v-model on selected option.
+    modelValue: { type: Array }, // v-model on selected option.
     labelOnLeft: { type: Boolean },
     itemLabelKey: { type: String, default: 'label' },
     itemValueKey: { type: String, default: 'value' },
@@ -59,13 +60,13 @@ export default {
       return (this.items || []).map((item, i) => {
         const itemValue = item[this.itemValueKey] === undefined ? (item[this.itemLabelKey] || i) : item[this.itemValueKey]
 
-        return Vue.observable({
+        return reactive({
           ...item,
           label: item[this.itemLabelKey],
           index: i,
           value: itemValue, // If no value is set then add one to prevent error.
           color: item[this.itemColorKey] || this.color,
-          isChecked: this.value && this.value.includes(itemValue)
+          isChecked: this.modelValue && this.modelValue.includes(itemValue)
         })
       })
     },

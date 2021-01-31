@@ -1,6 +1,7 @@
-# UI SKY 
+# UI SKY
 
 ## install
+
 ```
-npm i wave-ui@next
+npm i ui-sky
 ```

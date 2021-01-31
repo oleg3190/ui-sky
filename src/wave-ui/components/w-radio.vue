@@ -3,12 +3,12 @@ component(
   ref="formEl"
   :is="formRegister && !wRadios ? 'w-form-element' : 'div'"
   v-bind="formRegister && { validators, inputValue, disabled }"
-  :valid.sync="valid"
+  v-model:valid="valid"
   @reset="$emit('update:modelValue', inputValue = null);$emit('input', null)"
   :class="classes")
   input(
     ref="input"
-    :id="`w-radio--${_uid}`"
+    :id="`w-radio--${_.uid}`"
     type="radio"
     :name="inputName"
     :checked="inputValue || null"
@@ -19,16 +19,16 @@ component(
     :aria-checked="inputValue || 'false'"
     role="radio")
   template(v-if="hasLabel && labelOnLeft")
-    label.w-radio__label.w-form-el-shakable.pr2(v-if="$slots.default" :for="`w-radio--${_uid}`")
+    label.w-radio__label.w-form-el-shakable.pr2(v-if="$slots.default" :for="`w-radio--${_.uid}`")
       slot
-    label.w-radio__label.w-form-el-shakable.pr2(v-else-if="label" :for="`w-radio--${_uid}`" v-html="label")
+    label.w-radio__label.w-form-el-shakable.pr2(v-else-if="label" :for="`w-radio--${_.uid}`" v-html="label")
   .w-radio__input(
     @click="$refs.input.focus();$refs.input.click()"
     :class="this.color")
   template(v-if="hasLabel && !labelOnLeft")
-    label.w-radio__label.w-form-el-shakable.pl2(v-if="$slots.default" :for="`w-radio--${_uid}`")
+    label.w-radio__label.w-form-el-shakable.pl2(v-if="$slots.default" :for="`w-radio--${_.uid}`")
       slot
-    label.w-radio__label.w-form-el-shakable.pl2(v-else-if="label" :for="`w-radio--${_uid}`" v-html="label")
+    label.w-radio__label.w-form-el-shakable.pl2(v-else-if="label" :for="`w-radio--${_.uid}`" v-html="label")
 </template>
 
 <script>
@@ -40,7 +40,7 @@ export default {
   inject: { wRadios: { default: null } },
 
   props: {
-    value: { default: false }, // v-model to check or uncheck.
+    modelValue: { default: false }, // v-model to check or uncheck.
     // When `value` is taken by a v-model and multiple w-radio are plugged on
     // the same v-model, this allows returning a custom value to the v-model.
     returnValue: {},
@@ -64,7 +64,7 @@ export default {
 
   computed: {
     hasLabel () {
-      return (this.$slots.default && this.$slots.default.length) || this.label
+      return this.label || this.$slots.default
     },
     classes () {
       return {
@@ -78,7 +78,7 @@ export default {
 
   methods: {
     toggleFromOutside () {
-      this.inputValue = this.returnValue !== undefined ? (this.returnValue === this.value) : this.value
+      this.inputValue = this.returnValue !== undefined ? (this.returnValue === this.modelValue) : this.modelValue
     },
 
     onInput (e) {
@@ -105,11 +105,11 @@ export default {
   },
 
   created () {
-    if (this.value !== undefined) this.toggleFromOutside()
+    if (this.modelValue !== undefined) this.toggleFromOutside()
   },
 
   watch: {
-    value () {
+    modelValue () {
       this.toggleFromOutside()
     }
   }

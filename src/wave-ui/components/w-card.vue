@@ -5,8 +5,6 @@
     :class="{ 'w-card__title--has-toolbar': titleHasToolbar, [titleClass]: titleClass || false }")
     slot(name="title")
   .w-card__title(v-else-if="title" :class="titleClass || false" v-html="title")
-  w-image.w-card__image(v-if="image" :src="image" v-bind="imgProps")
-    slot(name="image-content")
   .w-card__content(:class="contentClass || false")
     slot
   .w-card__actions(
@@ -26,8 +24,6 @@ export default {
     noBorder: { type: Boolean },
     tile: { type: Boolean },
     title: { type: String },
-    image: { type: String },
-    imageProps: { type: Object },
     titleClass: { type: String },
     contentClass: { type: String }
   },
@@ -37,18 +33,11 @@ export default {
   computed: {
     titleHasToolbar () {
       const { title } = this.$slots
-      return title && title.map(vnode => vnode.tag).join('').includes('w-toolbar')
+      return title && title().map(vnode => vnode.type.name).join('').includes('w-toolbar')
     },
     actionsHasToolbar () {
       const { actions } = this.$slots
-      return actions && actions.map(vnode => vnode.tag).join('').includes('w-toolbar')
-    },
-    imgProps () {
-      return {
-        tag: 'div',
-        ratio: 1 / 2,
-        ...this.imageProps
-      }
+      return actions && actions().map(vnode => vnode.type.name).join('').includes('w-toolbar')
     },
     classes () {
       return {

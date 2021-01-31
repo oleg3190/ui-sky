@@ -75,15 +75,15 @@ export default {
       // modifier but it's not available with the v-on directive.
       // So do a manual router.push if $router is present.
       return this.route && this.hasRouter && !this.forceLink ? {
-        ...this.$listeners,
+        ...this.$attrs,
         click: e => {
-          if (this.$listeners.click) this.$listeners.click(e)
+          if (this.$attrs.click) this.$attrs.click(e)
 
           this.$router.push(this.route)
           e.stopPropagation() // If going to a route, no need to bubble up the event.
           e.preventDefault()
         }
-      } : this.$listeners
+      } : this.$attrs
     },
     size () {
       return (

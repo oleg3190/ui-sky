@@ -2,7 +2,13 @@
 .w-tooltip-wrap(ref="wrapper" :class="{ 'w-tooltip-wrap--attached': !detachTo }")
   slot(name="activator" :on="eventHandlers")
   transition(:name="transitionName")
-    .w-tooltip(ref="tooltip" v-show="showTooltip" :class="classes" :style="styles")
+    //- In Vue 3, a ref in a transition doesn't stay in $refs, it must be set as a function.
+    .w-tooltip(
+      :ref="el => tooltipEl = el"
+      :key="_.uid"
+      v-show="showTooltip"
+      :class="classes"
+      :style="styles")
       //- When there is a bg color, another div wrapper is needed for the triangle
       //- to inherit the current color.
       div(v-if="bgColor" :class="color")
@@ -28,7 +34,7 @@ export default {
   name: 'w-tooltip',
 
   props: {
-    value: {},
+    modelValue: {},
     showOnClick: { type: Boolean },
     color: { type: String },
     bgColor: { type: String },
@@ -204,30 +210,30 @@ export default {
         coords = { ...coords, top: top - targetTop, left: left - targetLeft }
       }
 
-      const tooltipEl = this.$refs.tooltip
+      const tooltip = this.tooltipEl
 
       // 1. First display the tooltip but hide it (So we can get its dimension).
-      tooltipEl.style.visibility = 'hidden'
-      tooltipEl.style.display = 'table'
-      const computedStyles = window.getComputedStyle(tooltipEl, null)
+      tooltip.style.visibility = 'hidden'
+      tooltip.style.display = 'table'
+      const computedStyles = window.getComputedStyle(tooltip, null)
 
       // Keep fully in viewport.
       // --------------------------------------------------
-      if (this.position === 'top' && ((top - tooltipEl.offsetHeight) < 0)) {
+      if (this.position === 'top' && ((top - tooltip.offsetHeight) < 0)) {
         const margin = - parseInt(computedStyles.getPropertyValue('margin-top'))
-        coords.top -= top - tooltipEl.offsetHeight - margin - marginFromWindowSide
+        coords.top -= top - tooltip.offsetHeight - margin - marginFromWindowSide
       }
-      else if (this.position === 'left' && left - tooltipEl.offsetWidth < 0) {
+      else if (this.position === 'left' && left - tooltip.offsetWidth < 0) {
         const margin = - parseInt(computedStyles.getPropertyValue('margin-left'))
-        coords.left -= left - tooltipEl.offsetWidth - margin - marginFromWindowSide
+        coords.left -= left - tooltip.offsetWidth - margin - marginFromWindowSide
       }
-      else if (this.position === 'right' && left + width + tooltipEl.offsetWidth > window.innerWidth) {
+      else if (this.position === 'right' && left + width + tooltip.offsetWidth > window.innerWidth) {
         const margin = parseInt(computedStyles.getPropertyValue('margin-left'))
-        coords.left -= left + width + tooltipEl.offsetWidth - window.innerWidth + margin + marginFromWindowSide
+        coords.left -= left + width + tooltip.offsetWidth - window.innerWidth + margin + marginFromWindowSide
       }
-      else if (this.position === 'bottom' && top + height + tooltipEl.offsetHeight > window.innerHeight) {
+      else if (this.position === 'bottom' && top + height + tooltip.offsetHeight > window.innerHeight) {
         const margin = parseInt(computedStyles.getPropertyValue('margin-top'))
-        coords.top -= top + height + tooltipEl.offsetHeight - window.innerHeight + margin + marginFromWindowSide
+        coords.top -= top + height + tooltip.offsetHeight - window.innerHeight + margin + marginFromWindowSide
       }
       // --------------------------------------------------
 
@@ -236,48 +242,47 @@ export default {
       // property so do without it and subtract half width or height manually.
       if (this.transition) {
         // If tooltip is on top or bottom.
-        if (['top', 'bottom'].includes(this.position)) coords.left -= tooltipEl.offsetWidth / 2
+        if (['top', 'bottom'].includes(this.position)) coords.left -= tooltip.offsetWidth / 2
         // If tooltip is on left or right.
-        if (['left', 'right'].includes(this.position)) coords.top -= tooltipEl.offsetHeight / 2
+        if (['left', 'right'].includes(this.position)) coords.top -= tooltip.offsetHeight / 2
 
-        if (this.position === 'left') coords.left -= tooltipEl.offsetWidth
-        if (this.position === 'top') coords.top -= tooltipEl.offsetHeight
+        if (this.position === 'left') coords.left -= tooltip.offsetWidth
+        if (this.position === 'top') coords.top -= tooltip.offsetHeight
       }
 
       // 3. Hide the tooltip again so the transition happens correctly.
-      tooltipEl.style.visibility = null
-      tooltipEl.style.display = 'none'
+      tooltip.style.visibility = null
+      tooltip.style.display = 'none'
 
       return coords
     },
 
     insertTooltip () {
       const wrapper = this.$refs.wrapper
-      this.tooltipEl = this.$refs.tooltip.$el || this.$refs.tooltip
 
       // Unwrap the activator element.
       wrapper.parentNode.insertBefore(this.activatorEl, wrapper)
 
       // Move the tooltip elsewhere in the DOM.
-      // wrapper.parentNode.insertBefore(this.$refs.tooltip, wrapper)
-      this.detachToTarget.appendChild(this.$refs.tooltip)
+      // wrapper.parentNode.insertBefore(this.tooltipEl, wrapper)
+      // this.tooltipEl is set in the dynamic ref.
+      this.detachToTarget.appendChild(this.tooltipEl)
     },
 
     removeTooltip () {
       // el.remove() doesn't work on IE11.
       if (this.tooltipEl && this.tooltipEl.parentNode) this.tooltipEl.parentNode.removeChild(this.tooltipEl)
     }
-
   },
 
   mounted () {
     this.activatorEl = this.$refs.wrapper.firstElementChild
     if (this.detachTo) this.insertTooltip()
 
-    if (this.value) this.toggle({ type: 'click', target: this.activatorEl })
+    if (this.modelValue) this.toggle({ type: 'click', target: this.activatorEl })
   },
 
-  beforeDestroy () {
+  beforeUnmount () {
     this.removeTooltip()
 
     // el.remove() doesn't work on IE11.
@@ -285,7 +290,7 @@ export default {
   },
 
   watch: {
-    value () {
+    modelValue () {
       this.toggle({ type: 'click', target: this.activatorEl })
     },
     detachTo () {
@@ -448,25 +453,25 @@ export default {
 }
 
 // slide-fade-up.
-.w-tooltip-slide-fade-up-enter, .w-tooltip-slide-fade-up-leave-to {
+.w-tooltip-slide-fade-up-enter-from, .w-tooltip-slide-fade-up-leave-to {
   margin-top: -2 * $base-increment;
   opacity: 0;
 }
 
 // slide-fade-down.
-.w-tooltip-slide-fade-down-enter, .w-tooltip-slide-fade-down-leave-to {
+.w-tooltip-slide-fade-down-enter-from, .w-tooltip-slide-fade-down-leave-to {
   margin-top: 2 * $base-increment;
   opacity: 0;
 }
 
 // Slide-fade-left.
-.w-tooltip-slide-fade-left-enter, .w-tooltip-slide-fade-left-leave-to {
+.w-tooltip-slide-fade-left-enter-from, .w-tooltip-slide-fade-left-leave-to {
   margin-left: -2 * $base-increment;
   opacity: 0;
 }
 
 // Slide-fade-right.
-.w-tooltip-slide-fade-right-enter, .w-tooltip-slide-fade-right-leave-to {
+.w-tooltip-slide-fade-right-enter-from, .w-tooltip-slide-fade-right-leave-to {
   margin-left: 2 * $base-increment;
   opacity: 0;
 }

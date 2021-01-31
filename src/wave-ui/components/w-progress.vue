@@ -48,7 +48,7 @@ export default {
   name: 'w-progress',
 
   props: {
-    value: { type: [Number, String, Boolean], default: -1 },
+    modelValue: { type: [Number, String, Boolean], default: -1 },
     label: { type: Boolean },
     roundCap: { type: Boolean },
     color: { type: String, default: 'primary' },
@@ -83,7 +83,7 @@ export default {
 
   computed: {
     progressValue () {
-      return parseFloat(this.value)
+      return parseFloat(this.modelValue)
     },
 
     circleCenter () {
@@ -106,7 +106,7 @@ export default {
         [`${this.bgColor}--bg`]: this.bgColor && !this.circle,
         [`w-progress--${this.position}`]: !this.circle && (this.absolute || this.fixed),
         'w-progress--default-bg': !this.bgColor,
-        'w-progress--indeterminate': this.value === -1,
+        'w-progress--indeterminate': this.modelValue === -1,
         'w-progress--outline': !this.circle && this.outline,
         'w-progress--tile': !this.circle && this.tile,
         'w-progress--stripes': !this.circle && this.stripes,

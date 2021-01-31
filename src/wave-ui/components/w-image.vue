@@ -10,8 +10,6 @@ component.w-image-wrap(:is="wrapperTag" :class="wrapperClasses" :style="wrapperS
   .w-image__loader(v-if="!noSpinner && loading")
     slot(v-if="$slots.loading" name="loading")
     w-progress(v-else circle indeterminate)
-  component.w-image__content(v-if="$slots.default" :is="wrapperTag" :class="contentClass")
-    slot
 </template>
 
 <script>
@@ -24,7 +22,6 @@ component.w-image-wrap(:is="wrapperTag" :class="wrapperClasses" :style="wrapperS
  * - adaptive & locked size: given width or height and using <img>
  **/
 
-// @todo handle figure, captions, srcset, webp.
 import { consoleWarn } from '../utils/console'
 
 export default {
@@ -41,8 +38,7 @@ export default {
     contain: { type: Boolean },
     noSpinner: { type: Boolean },
     fallback: { type: String },
-    transition: { type: String, default: 'fade' },
-    contentClass: { type: [String, Array, Object] }
+    transition: { type: String, default: 'fade' }
   },
 
   emits: ['loading', 'loaded', 'error'],
@@ -64,7 +60,7 @@ export default {
     },
 
     wrapperTag () {
-      return ['span', 'div'].includes(this.tag) ? this.tag : 'span'
+      return ['span' || 'div'].includes(this.tag) ? this.tag : 'span'
     },
 
     wrapperClasses () {
@@ -199,16 +195,15 @@ export default {
 
   &--contain {background-size: contain;}
 
-  &__loader, &__content {
+  &__loader {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
     display: flex;
-    justify-content: center;
     align-items: center;
-    z-index: 1;
+    justify-content: center;
   }
 }
 </style>

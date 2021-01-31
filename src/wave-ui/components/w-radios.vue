@@ -3,24 +3,25 @@ component(
   ref="formEl"
   :is="formRegister ? 'w-form-element' : 'div'"
   v-bind="formRegister && { validators, inputValue, disabled }"
-  :valid.sync="valid"
+  v-model:valid="valid"
   @reset="$emit('update:modelValue', inputValue = null);$emit('input', null)"
   :column="!inline"
   :class="classes")
   w-radio(
     v-for="(item, i) in radioItems"
     :key="i"
-    @input="onInput(item)"
+    :model-value="item.value === modelValue"
+    @update:model-value="onInput(item)"
     @focus="$emit('focus', $event)"
     :name="inputName"
-    :value="item.value === value"
     :label="item.label"
     :label-on-left="labelOnLeft"
     :color="item.color"
     :disabled="disabled || null"
     :readonly="readonly || null"
     :class="{ mt1: !inline && i }")
-    slot(name="item" v-if="$scopedSlots.item" :item="item" v-html="item.label")
+    slot(v-if="$slots.item" name="item" :item="item")
+    div(v-else-if="item.label" v-html="item.label")
 </template>
 
 <script>
@@ -32,7 +33,7 @@ export default {
 
   props: {
     items: { type: Array, required: true }, // All the possible options.
-    value: { type: [String, Number, Boolean] }, // v-model on selected option.
+    modelValue: { type: [String, Number, Boolean] }, // v-model on selected option.
     labelOnLeft: { type: Boolean },
     itemLabelKey: { type: String, default: 'label' },
     itemValueKey: { type: String, default: 'value' },

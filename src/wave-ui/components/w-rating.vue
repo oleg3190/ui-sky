@@ -7,10 +7,9 @@ component(
   @reset="$emit('update:modelValue', rating = null);$emit('input', null)"
   :class="classes")
   input(:id="inputName" :name="inputName" type="hidden" :value="rating")
-  template(v-for="i in max")
-    slot(v-if="$scopedSlots.item" name="item" :index="i + 1")
+  template(v-for="i in max" :key="i")
+    slot(v-if="$slots.item" name="item" :index="i + 1")
     button.w-rating__button(
-      :key="i"
       :disabled="disabled || readonly"
       @mouseenter="hover = i"
       @mouseleave="hover = 0"
@@ -37,7 +36,7 @@ export default {
   mixins: [FormElementMixin],
 
   props: {
-    value: {},
+    modelValue: {},
     max: { type: Number, default: 5 },
     color: { type: String, default: 'primary' },
     bgColor: { type: String, default: 'grey-light4' },
@@ -55,7 +54,7 @@ export default {
 
   data () {
     return {
-      rating: parseFloat(this.value || 0),
+      rating: parseFloat(this.modelValue || 0),
       hover: 0, // The index (starts at 1) of the currently hovered button.
       hasFocus: 0, // The index (starts at 1) of the currently focused button.
       ripple: {

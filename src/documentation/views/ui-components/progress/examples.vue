@@ -34,30 +34,30 @@ div
       When the value is #[code undefined], #[code -1] or not provided at all, it will be assumed
       indeterminate.
     example(reactive)
-      w-progress.ma1(circle :value="undefined")
-      w-progress.ma1.mr8(circle :value="-1")
-      w-progress.ma1(circle value="0")
-      w-progress.ma1(circle value="12.5")
-      w-progress.ma1(circle value="25")
-      w-progress.ma1(circle value="50")
-      w-progress.ma1(circle value="75")
-      w-progress.ma1(circle value="100")
+      w-progress.ma1(circle :model-value="undefined")
+      w-progress.ma1.mr8(circle :model-value="-1")
+      w-progress.ma1(circle model-value="0")
+      w-progress.ma1(circle model-value="12.5")
+      w-progress.ma1(circle model-value="25")
+      w-progress.ma1(circle model-value="50")
+      w-progress.ma1(circle model-value="75")
+      w-progress.ma1(circle model-value="100")
       template(#pug).
-        w-progress.ma1(circle :value="undefined")
-        w-progress.ma1.mr8(circle :value="-1")
+        w-progress.ma1(circle :model-value="undefined")
+        w-progress.ma1.mr8(circle :model-value="-1")
 
-        w-progress.ma1(circle value="0")
-        w-progress.ma1(circle value="12.5")
-        w-progress.ma1(circle value="25")
-        w-progress.ma1(circle value="50")
-        w-progress.ma1(circle value="75")
-        w-progress.ma1(circle value="100")
+        w-progress.ma1(circle model-value="0")
+        w-progress.ma1(circle model-value="12.5")
+        w-progress.ma1(circle model-value="25")
+        w-progress.ma1(circle model-value="50")
+        w-progress.ma1(circle model-value="75")
+        w-progress.ma1(circle model-value="100")
 
     h3 Updated value example
     example(reactive)
-      w-progress(circle :value="progress")
+      w-progress(circle :model-value="progress")
       template(#pug).
-        w-progress(circle :value="progress")
+        w-progress(circle :model-value="progress")
       template(#js).
         data: () => ({
           progress: 0
@@ -73,20 +73,20 @@ div
 
     title-link(h2) Size &amp; stroke thickness
     example(reactive)
-      w-progress.ma1(circle value="38" color="blue")
-      w-progress.ma1(circle value="38" size="4em" color="blue")
-      w-progress.ma1.mr8(circle value="38" size="5em" color="blue")
-      w-progress.ma1(circle value="38" size="6em" :stroke="2" color="blue")
-      w-progress.ma1(circle value="38" size="6em" :stroke="15" color="blue")
-      w-progress.ma1(circle value="38" size="6em" :stroke="40" color="blue")
+      w-progress.ma1(circle model-value="38" color="blue")
+      w-progress.ma1(circle model-value="38" size="4em" color="blue")
+      w-progress.ma1.mr8(circle model-value="38" size="5em" color="blue")
+      w-progress.ma1(circle model-value="38" size="6em" :stroke="2" color="blue")
+      w-progress.ma1(circle model-value="38" size="6em" :stroke="15" color="blue")
+      w-progress.ma1(circle model-value="38" size="6em" :stroke="40" color="blue")
       template(#pug).
-        w-progress.ma1(circle value="38" color="blue")
-        w-progress.ma1(circle value="38" size="4em" color="blue")
-        w-progress.ma1.mr8(circle value="38" size="5em" color="blue")
+        w-progress.ma1(circle model-value="38" color="blue")
+        w-progress.ma1(circle model-value="38" size="4em" color="blue")
+        w-progress.ma1.mr8(circle model-value="38" size="5em" color="blue")
 
-        w-progress.ma1(circle value="38" size="6em" :stroke="2" color="blue")
-        w-progress.ma1(circle value="38" size="6em" :stroke="15" color="blue")
-        w-progress.ma1(circle value="38" size="6em" :stroke="40" color="blue")
+        w-progress.ma1(circle model-value="38" size="6em" :stroke="2" color="blue")
+        w-progress.ma1(circle model-value="38" size="6em" :stroke="15" color="blue")
+        w-progress.ma1(circle model-value="38" size="6em" :stroke="40" color="blue")
 
     title-link(h2) Progress value with label
     p The default label displays the rounded value without the #[code %] sign, so it fits in smaller circles.
@@ -112,25 +112,25 @@ div
     example(reactive)
       w-progress.ma1(
         circle
-        value="38"
+        model-value="38"
         size="3em"
         label
         label-color="indigo-light4")
       template(#pug).
         w-progress.ma1(
           circle
-          value="38"
+          model-value="38"
           size="3em"
           label
           label-color="indigo-light4")
 
     title-link(h2) Round linecap &amp; default flat line cap
     example(reactive)
-      w-progress.ma1(circle value="38" size="6em" round-cap)
-      w-progress.ma1(circle value="38" size="6em")
+      w-progress.ma1(circle model-value="38" size="6em" round-cap)
+      w-progress.ma1(circle model-value="38" size="6em")
       template(#pug).
-        w-progress.ma1(circle value="38" size="6em" round-cap)
-        w-progress.ma1(circle value="38" size="6em")
+        w-progress.ma1(circle model-value="38" size="6em" round-cap)
+        w-progress.ma1(circle model-value="38" size="6em")
 
   //- Linear progress.
   //-------------------------------------------------------
@@ -154,39 +154,39 @@ div
 
     title-link(h2) Size
     example(reactive)
-      w-progress(value="38" size="1em" color="blue")
-      w-progress.mt4(value="38" size="2.5em" color="blue")
+      w-progress(model-value="38" size="1em" color="blue")
+      w-progress.mt4(model-value="38" size="2.5em" color="blue")
       template(#pug).
-        w-progress(value="38" size="1em" color="blue")
-        w-progress.mt4(value="38" size="2.5em" color="blue")
+        w-progress(model-value="38" size="1em" color="blue")
+        w-progress.mt4(model-value="38" size="2.5em" color="blue")
 
     title-link(h2) Tile &amp; round
     example(reactive)
-      w-progress(value="38" size="1.4em" tile color="light-blue")
-      w-progress.mt4(value="38" size="1.4em" round color="light-blue")
+      w-progress(model-value="38" size="1.4em" tile color="light-blue")
+      w-progress.mt4(model-value="38" size="1.4em" round color="light-blue")
       template(#pug).
-        w-progress(value="38" size="1.4em" tile color="light-blue")
-        w-progress.mt4(value="38" size="1.4em" round color="light-blue")
+        w-progress(model-value="38" size="1.4em" tile color="light-blue")
+        w-progress.mt4(model-value="38" size="1.4em" round color="light-blue")
 
     title-link(h2) Outline &amp; shadow
     example(reactive)
-      w-progress(value="38" size="1em" outline round color="light-blue")
-      w-progress.mt4(value="38" size="1em" shadow color="light-blue")
+      w-progress(model-value="38" size="1em" outline round color="light-blue")
+      w-progress.mt4(model-value="38" size="1em" shadow color="light-blue")
       template(#pug).
-        w-progress(value="38" size="1em" outline round color="light-blue")
-        w-progress.mt4(value="38" size="1em" shadow color="light-blue")
+        w-progress(model-value="38" size="1em" outline round color="light-blue")
+        w-progress.mt4(model-value="38" size="1em" shadow color="light-blue")
 
     title-link(h2) Stripes (only if determinate)
     example(reactive)
       w-progress(
-        value="38"
+        model-value="38"
         size="1em"
         outline
         round
         color="light-blue"
         stripes)
       w-progress.mt4(
-        value="38"
+        model-value="38"
         size="1.4em"
         outline
         round
@@ -194,14 +194,14 @@ div
         stripes)
       template(#pug).
         w-progress(
-          value="38"
+          model-value="38"
           size="1em"
           outline
           round
           color="light-blue"
           stripes)
         w-progress.mt4(
-          value="38"
+          model-value="38"
           size="1.4em"
           outline
           round
@@ -239,7 +239,7 @@ div
       So you are free to decide what is the best color.
     example(reactive)
       w-progress.mt2(
-        value="50.3"
+        model-value="50.3"
         size="2em"
         outline
         round
@@ -247,7 +247,7 @@ div
         label-color="indigo-light4")
       template(#pug).
         w-progress(
-          value="50.3"
+          model-value="50.3"
           size="2em"
           outline
           round
@@ -256,11 +256,11 @@ div
 
     title-link(h2) Round linecap &amp; default flat line cap
     example(reactive)
-      w-progress(value="38" size="2em" round round-cap)
-      w-progress.mt4(value="38" size="2em" round)
+      w-progress(model-value="38" size="2em" round round-cap)
+      w-progress.mt4(model-value="38" size="2em" round)
       template(#pug).
-        w-progress(value="38" size="2em" round round-cap)
-        w-progress.mt4(value="38" size="2em" round)
+        w-progress(model-value="38" size="2em" round round-cap)
+        w-progress.mt4(model-value="38" size="2em" round)
 </template>
 
 <script>
@@ -284,7 +284,7 @@ export default {
     }, 700)
   },
 
-  beforeDestroy () {
+  beforeUnmount () {
     clearInterval(this.intervalId)
   }
 }

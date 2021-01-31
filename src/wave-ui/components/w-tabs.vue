@@ -12,7 +12,7 @@
       :aria-selected="item._active ? 'true' : 'false'"
       role="tab")
         slot(
-          v-if="$scopedSlots[`item-title.${item.id || i + 1}`]"
+          v-if="$slots[`item-title.${item.id || i + 1}`]"
           :name="`item-title.${item.id || i + 1}`"
           :item="cleanTab(item)"
           :index="i + 1"
@@ -24,7 +24,7 @@
     transition(:name="transitionName" :mode="transitionMode")
       .w-tabs__content(v-if="activeTab" :key="activeTab._index")
         slot(
-          v-if="$scopedSlots[`item-content.${activeTab.id || activeTab._index + 1}`]"
+          v-if="$slots[`item-content.${activeTab.id || activeTab._index + 1}`]"
           :name="`item-content.${activeTab.id || activeTab._index + 1}`"
           :item="cleanTab(activeTab)"
           :index="activeTab._index + 1"
@@ -38,13 +38,13 @@
 </template>
 
 <script>
-import Vue from 'vue'
+import { reactive } from 'vue'
 
 export default {
   name: 'w-tabs',
 
   props: {
-    value: { type: Array },
+    modelValue: { type: Array },
     color: { type: String },
     bgColor: { type: String },
     items: { type: [Array, Number] },
@@ -95,10 +95,10 @@ export default {
         if (items[this.activeTabIndex]) items[this.activeTabIndex] = { _active: true }
       }
 
-      return items.map((item, _index) => new Vue.observable({
+      return items.map((item, _index) => reactive({
         ...item,
         _index,
-        _active: item._active || (this.value && this.value[_index]),
+        _active: item._active || (this.modelValue && this.modelValue[_index]),
         _disabled: !!item.disabled
       }))
     },
@@ -204,14 +204,14 @@ export default {
     if (!this.noSlider) window.addEventListener('resize', this.onResize)
   },
 
-  beforeDestroy () {
+  beforeUnmount () {
     window.removeEventListener('resize', this.onResize)
   },
 
   watch: {
-    value (array) {
+    modelValue (array) {
       this.tabsItems.forEach((item, i) => {
-        this.$set(item, '_active', (Array.isArray(array) && array[i]) || false)
+        item._active = (Array.isArray(array) && array[i]) || false
       })
     },
     items () {

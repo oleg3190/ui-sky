@@ -22,7 +22,7 @@
         @click.stop="!item._disabled && toggleItem(item, $event)")
       //- Title.
       slot(
-        v-if="$scopedSlots[`item-title.${item.id || i + 1}`]"
+        v-if="$slots[`item-title.${item.id || i + 1}`]"
         :name="`item-title.${item.id || i + 1}`"
         :item="cleanItem(item)"
         :expanded="item._expanded" :index="i + 1")
@@ -39,7 +39,7 @@
     w-transition-expand(y)
       .w-accordion__item-content(v-if="item._expanded" :class="contentClass")
         slot(
-          v-if="$scopedSlots[`item-content.${item.id || i + 1}`]"
+          v-if="$slots[`item-content.${item.id || i + 1}`]"
           :name="`item-content.${item.id || i + 1}`"
           :item="cleanItem(item)"
           :expanded="item._expanded" :index="i + 1")
@@ -48,13 +48,13 @@
 </template>
 
 <script>
-import Vue from 'vue'
+import { reactive } from 'vue'
 
 export default {
   name: 'w-accordion',
 
   props: {
-    value: { type: Array },
+    modelValue: { type: Array },
     color: { type: String },
     bgColor: { type: String },
     items: { type: [Array, Number], required: true },
@@ -76,10 +76,10 @@ export default {
   computed: {
     accordionItems () {
       const items = typeof this.items === 'number' ? Array(this.items).fill({}) : this.items || []
-      return items.map((item, _index) => new Vue.observable({
+      return items.map((item, _index) => reactive({
         ...item,
         _index,
-        _expanded: this.value && this.value[_index],
+        _expanded: this.modelValue && this.modelValue[_index],
         _disabled: !!item.disabled
       }))
     },
@@ -127,9 +127,9 @@ export default {
   },
 
   watch: {
-    value (array) {
+    modelValue (array) {
       this.accordionItems.forEach((item, i) => {
-        this.$set(item, 'expanded', (Array.isArray(array) && array[i]) || false)
+        item.expanded = (Array.isArray(array) && array[i]) || false
       })
     }
   }

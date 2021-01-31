@@ -84,7 +84,7 @@
           w-icon(color="primary") mdi mdi-content-copy
         slot(name="scss")
       w-notification.mr5.mt-1(
-        :value="!!showCopied"
+        :model-value="!!showCopied"
         transition="slide-fade-left"
         plain
         absolute
@@ -115,40 +115,47 @@ export default {
       ]
 
       const cssDeps = [
-        'https://unpkg.com/wave-ui@latest/dist/wave-ui.css',
+        'https://unpkg.com/wave-ui@next/dist/wave-ui.css',
         'https://cdn.materialdesignicons.com/5.1.45/css/materialdesignicons.min.css'
       ]
       if (this.externalCss) cssDeps.push(this.externalCss)
 
       const jsDeps = [
-        'https://unpkg.com/vue@latest/dist/vue.js',
-        'https://unpkg.com/wave-ui@latest/dist/wave-ui.umd.min.js'
+        'https://unpkg.com/vue@3',
+        'https://unpkg.com/wave-ui@next/dist/wave-ui.umd.min.js'
       ]
       if (this.externalJs) jsDeps.push(this.externalJs)
 
+      const { html: htmlSlot, pug, js: jsSlot, css: cssSlot, scss } = this.$slots
       const slots = {
-        html: this.$slots.html && this.$slots.html[0].text || '',
-        pug: this.$slots.pug && this.$slots.pug[0].text || '',
-        js: this.$slots.js && this.$slots.js[0].text || '',
-        css: this.$slots.css && this.$slots.css[0].text || '',
-        scss: this.$slots.scss && this.$slots.scss[0].text || ''
+        html: htmlSlot && htmlSlot()[0].children || '',
+        pug: pug && pug()[0].children || '',
+        js: jsSlot && jsSlot()[0].children || '',
+        css: cssSlot && cssSlot()[0].children || '',
+        scss: scss && scss()[0].children || ''
       }
       let html = ''
 
       if (slots.pug) {
-        html = 'w-app#app(block)\n  ' +
-               slots.pug.replace(/\n$/, '').replace(/\n/g, '\n  ')
+        html = '#app\n' +
+               '  w-app(block)\n' +
+               '    ' + slots.pug.replace(/\n$/, '').replace(/\n/g, '\n    ')
       }
       else {
-        html = '<w-app id="app" block>\n  ' +
-               slots.html.replace(/\n$/, '').replace(/\n/g, '\n  ') +
-               '\n</w-app>\n'
+        html = '<div id="app">\n' +
+               '  <w-app id="app" block>\n' +
+               '    ' + slots.html.replace(/\n$/, '').replace(/\n/g, '\n    ') +
+               '\n  </w-app>\n' +
+               '</div>\n'
       }
       const css = '.w-app {font: 14px sans-serif;padding: 24px;}\n\n' + (slots.css || slots.scss)
-      const js = this.fullJs ? slots.js : ('new Vue({' +
-                 '\n  waveui: new WaveUI(),\n  ' +
-                 slots.js.replace(/\n$/, '').replace(/\n/g, '\n  ') +
-                 '\n}).$mount(\'#app\')')
+      const js = this.fullJs ? slots.js : (
+        'const app = Vue.createApp({\n' +
+        '  ' + slots.js.replace(/\n$/, '').replace(/\n/g, '\n  ') + '\n' +
+        '})\n\n' +
+        'new WaveUI(app, {})\n\n' +
+        'app.mount(\'#app\')'
+      )
 
       const data = {
         title: 'Wave UI Example Pen',

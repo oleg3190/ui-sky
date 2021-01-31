@@ -3,16 +3,16 @@ component(
   ref="formEl"
   :is="formRegister ? 'w-form-element' : 'div'"
   v-bind="formRegister && { validators, inputValue: rangeValueScaled, disabled, readonly }"
-  :valid.sync="valid"
+  v-model:valid="valid"
   @reset="rangeValuePercent = 0;updateRangeValueScaled()"
   :class="wrapperClasses")
   label.w-slider__label.w-slider__label--left.w-form-el-shakable(
     v-if="$slots['label-left']"
-    :for="`button--${_uid}`")
+    :for="`button--${_.uid}`")
     slot(name="label-left")
   label.w-slider__label.w-slider__label--left.w-form-el-shakable(
     v-else-if="labelLeft"
-    :for="`button--${_uid}`"
+    :for="`button--${_.uid}`"
     v-html="labelLeft")
   .w-slider__track-wrap
     .w-slider__track(
@@ -31,10 +31,10 @@ component(
       .w-slider__thumb(:style="thumbStyles")
         button.w-slider__thumb-button(
           ref="thumb"
-          :id="`button--${_uid}`"
+          :id="`button--${_.uid}`"
           :class="[color]"
           :name="inputName"
-          :value="rangeValueScaled"
+          :model-value="rangeValueScaled"
           :disabled="disabled || null"
           :readonly="readonly || null"
           :aria-readonly="readonly ? 'true' : 'false'"
@@ -44,7 +44,7 @@ component(
           @click.prevent)
         label.w-slider__thumb-label(
           v-if="thumbLabel"
-          :for="`button--${_uid}`"
+          :for="`button--${_.uid}`"
           :class="thumbClasses")
           div(v-if="thumbLabel === 'droplet'")
             slot(name="label" :value="rangeValueScaled") {{ ~~rangeValueScaled }}
@@ -63,11 +63,11 @@ component(
         style="left: 100%") {{ this.maxVal }}
   label.w-slider__label.w-slider__label--right.w-form-el-shakable(
     v-if="$slots['label-right']"
-    :for="`button--${_uid}`")
+    :for="`button--${_.uid}`")
     slot(name="label-right")
   label.w-slider__label.w-slider__label--right.w-form-el-shakable(
     v-else-if="labelRight"
-    :for="`button--${_uid}`"
+    :for="`button--${_.uid}`"
     v-html="labelRight")
 </template>
 
@@ -79,7 +79,7 @@ export default {
   mixins: [FormElementMixin],
 
   props: {
-    value: { type: Number, default: 0 },
+    modelValue: { type: Number, default: 0 },
     color: { type: String, default: 'primary' },
     bgColor: { type: String },
     stepLabels: { type: [Boolean, Array] },
@@ -233,13 +233,13 @@ export default {
   beforeMount () {
     this.$nextTick(() => {
       this.track.el = this.$refs.track
-      this.rangeValueScaled = this.value
-      this.rangeValuePercent = this.scaledToPercent(this.value)
+      this.rangeValueScaled = this.modelValue
+      this.rangeValuePercent = this.scaledToPercent(this.modelValue)
     })
   },
 
   watch: {
-    value (value) {
+    modelValue (value) {
       if (this.rangeValueScaled !== value) {
         this.rangeValueScaled = value
         this.rangeValuePercent = this.scaledToPercent(value)

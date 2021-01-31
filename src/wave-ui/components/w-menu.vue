@@ -23,10 +23,10 @@
   w-overlay(
     v-if="overlay"
     ref="overlay"
-    :value="showMenu"
+    :model-value="showMenu"
     :persistent="persistent"
     :z-index="(zIndex || 200) - 1"
-    @input="showMenu = false")
+    @update:model-value="showMenu = false")
 </template>
 
 <script>
@@ -47,7 +47,7 @@ export default {
   name: 'w-menu',
 
   props: {
-    value: {}, // Show or hide.
+    modelValue: {}, // Show or hide.
     showOnHover: { type: Boolean },
     hideOnMenuClick: { type: Boolean },
     color: { type: String },
@@ -377,10 +377,10 @@ export default {
     this.overlayEl = this.overlay ? this.$refs.overlay.$el : null
     this.insertMenu()
 
-    if (this.value) this.toggle({ type: 'click', target: this.activatorEl })
+    if (this.modelValue) this.toggle({ type: 'click', target: this.activatorEl })
   },
 
-  beforeDestroy () {
+  beforeUnmount () {
     this.removeMenu()
     // el.remove() doesn't work on IE11.
     if (this.overlay && this.overlayEl.parentNode) this.overlayEl.parentNode.removeChild(this.overlayEl)
@@ -388,7 +388,7 @@ export default {
   },
 
   watch: {
-    value (value) {
+    modelValue (value) {
       if (!!value !== this.showMenu) this.toggle({ type: 'click', target: this.activatorEl })
     },
     detachTo () {
