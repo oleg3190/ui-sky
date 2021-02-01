@@ -20,11 +20,14 @@
   },
   "scripts": {
     "serve": "vue-cli-service serve",
+     "prepare": "npm run build",
     "build": "vue-cli-service build",
     "build-bundle": "vue-cli-service build --target lib --name wave-ui ./src/wave-ui/index.js --dest ./dist && rm ./dist/demo.html",
     "lint": "vue-cli-service lint"
   },
-  "dependencies": {},
+  "dependencies": {
+    "html-react-parser": "git+https://github.com/remarkablemark/html-react-parser.git"
+  },
   "devDependencies": {
     "@mdi/font": "^5.8.55",
     "@vue/cli-plugin-babel": "^4.5.8",
