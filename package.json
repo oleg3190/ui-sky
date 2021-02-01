@@ -14,7 +14,10 @@
     "ui-sky"
   ],
   "license": "MIT",
-  "repository": "https://github.com/oleg3190/ui-sky",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/oleg3190/ui-sky"
+  },
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
