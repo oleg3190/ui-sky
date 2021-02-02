@@ -20,7 +20,7 @@
   },
   "scripts": {
     "serve": "vue-cli-service serve",
-     "prepare": "npm run build",
+     "prepare": "npm run vue-cli-service build",
     "build": "vue-cli-service build",
     "build-bundle": "vue-cli-service build --target lib --name wave-ui ./src/wave-ui/index.js --dest ./dist && rm ./dist/demo.html",
     "lint": "vue-cli-service lint"
