@@ -1,5 +1,5 @@
 {
-  "name": "@oleg3190/ui-sky",
+  "name": "hhhvooboo",
   "version": "1.0.0",
   "description": "An emerging",
   "author": "Andre Z <dante.zed@yandex.ru>",
@@ -11,9 +11,8 @@
     "src/wave-ui"
   ],
   "keywords": [
-    "ui-sky"
   ],
-  "license": "ISC",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/oleg3190/ui-sky.git"
